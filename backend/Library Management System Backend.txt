@@ -1,0 +1,42 @@
+Library Management System Backend
+TECH STACK - 
+	express, mongoose, cors, jsonwebtoken, dotenv, cookie-parser, bcrypt
+.env - 
+	PORT=
+	MONGO_URI=...
+	SALT=
+	JSON_WEB_TOKEN=
+Config-
+	db.js
+	config.js
+Model -
+	user.model.js
+	books.model.js
+	myBook.model.js
+Route-
+	auth.route.js
+	user.route.js
+	book.route.js
+	myBook.route.js
+Middleware-
+	auth.middleware.js
+controller-
+	auth.controller.js
+		1. signup
+		2. login 
+		3. logout
+	user.controller.js
+		1. readAllUser
+		2. readUser
+		3. updateUser
+		4. deleteUser
+	book.controller.js
+		1. readAllBooks
+		2. readBook
+		3. updateBook
+		4. deleteBook
+	myBook.controller.js
+		1. readAllMyBooks
+		2. readMyBook
+		3. updateMyBook
+		4. deleteMyBook
