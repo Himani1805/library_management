@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import './App.css'
-// import Signup from './pages/Signup';
-// import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 // import Dashboard from "./components/common/Dashboard";
 import Footer from "./components/common/Footer";
 import MainLayout from "./components/common/MainLayout";
@@ -17,8 +17,8 @@ function App() {
       <MainLayout />
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} /> */}
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboardStudent" element={<Dashboard />} />
       </Routes>
       <Footer />
