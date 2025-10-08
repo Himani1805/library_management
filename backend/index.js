@@ -8,6 +8,8 @@ import { myBookRouter } from "./src/routes/mybooks.route.js";
 import { authentication, authriozation } from "./src/middlewares/auth.middleware.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { settingsRouter } from "./src/routes/settings.route.js";
+
 
 const app = express()
 app.use(express.json())
@@ -23,6 +25,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/books', bookRouter)
 app.use('/api/mybooks', authentication, authriozation(["Admin", "User"]), myBookRouter)
+app.use('/api/settings', settingsRouter);
 
 app.use(express.urlencoded({ extended: true }));
 

@@ -76,7 +76,7 @@ async function login(request, response, next) {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
-    return response.status(201).json({
+    return response.status(200).json({
       message: "Login is successful.",
       user: {
         id: user._id,
