@@ -5,6 +5,7 @@ const MainLayout = () => {
   return (
     <div>
        <Navbar />
+       
     </div>
   )
 }

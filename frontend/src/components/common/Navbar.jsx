@@ -8,13 +8,15 @@ import {
   LogOut,
   User,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [studentDropdown, setStudentDropdown] = useState(false);
   const [userName, setUsername] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -23,21 +25,40 @@ const Navbar = () => {
     }
   }, []);
 
+  function handleAccount(){
+    setStudentDropdown(!studentDropdown)
+    navigate("/account")
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    window.location.href = "/login"; // redirect to login after logout
+    window.location.href = "/login";
   };
 
   return (
-    <nav className="w-full shadow-md p-4 bg-white">
-      <div className="flex justify-between items-center max-w-7xl mx-auto">
+    <nav className="w-full shadow-md p-3 bg-white">
+      <div className="flex justify-between items-center px-5">
         {/* Logo  */}
-        <div className="flex items-center">
-          <BookOpenText className="font-lg mr-2 text-cyan-800" />
-          <Link to="/" className="text-2xl font-bold">
-            Library Management System
+        <div className="flex items-center gap-2 justify-center">
+          {/* <BookOpenText size={30} className="font-lg mr-2 text-cyan-800" /> */}
+          <BookOpenText
+            size={40}
+            className="mr-2 text-cyan-600 drop-shadow-lg hover:text-orange-500 transition"
+          />
+          <Link to="/" >
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="text-2xl md:text-4xl font-extrabold tracking-wide 
+              bg-gradient-to-r from-cyan-500 via-blue-500 to-orange-400 
+              text-transparent bg-clip-text drop-shadow-lg"
+            >
+              TRANZO
+            </motion.h1>
           </Link>
+
         </div>
 
         {/* Desktop Menu */}
@@ -58,7 +79,8 @@ const Navbar = () => {
               {/* Account Dropdown */}
               <div className="relative">
                 <button
-                  onClick={() => setStudentDropdown(!studentDropdown)}
+                  onClick={handleAccount}
+                  // onClick={() => setStudentDropdown(!studentDropdown)}
                   className="flex items-center gap-1 hover:text-cyan-800 focus:outline-none"
                 >
                   Account <ChevronDown />

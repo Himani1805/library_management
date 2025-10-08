@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../utils/apiClient';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -10,31 +11,29 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true)
-    // console.log(username,password);
+    // console.log(email,password);
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: new URLSearchParams({
-        username,
-        password
-      }).toString(),
-    }
     try {
-      const response = await fetch(
-        "http://localhost:5173/api/auth/login", requestOptions
-      );
+      const payload = {
+        email,
+        password
+      }
+      const response = await apiClient.post("/auth/login", payload)
+      // console.log("response", response)
+      const result = await response.data
+      // console.log("result", result)
+      // if (response.status === 201) {
+      //     console.log("Signup successfull", result)
+      //     navigate("/login");
+      // }
 
-      const result = await response.text()
-      if (response.ok) {
+      if (response.status === 200) {
         localStorage.setItem("token", result.access_token);
         localStorage.setItem("token_type", result.token_type);
-        localStorage.setItem("username", result.username);
+        localStorage.setItem("email", result.email);
 
         setTimeout(() => {
-          navigate("/");
+          navigate("/admin");
           window.location.reload();
         }, 2000)
       }
@@ -61,42 +60,42 @@ const Login = () => {
         {/* Login form */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-8">
           <div className="bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center md:text-center">Welcome to Library Management</h2>
-          <p className="text-gray-500 text-center md:text-center mb-6 text-sm">Login to access your Library Dashboard</p>
-          <form
-            onSubmit={handleLogin}
-            className="space-y-4"
-          >
-            <input
-              type="text"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-              placeholder='Username'
-              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
-            />
-            <input
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              placeholder="Password"
-              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
-            />
-            <input
-              type="checkbox"
-              // onChange={(e) => setPassword(e.target.value)}
-              // value={checkbox}
-              className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
-            />
-            
-            <label for="checkbox" class="ml-2 text-sm font-medium text-gray-900">Remember me</label>
-            <button
-              type='submit'
-              className="w-full mt-2 bg-cyan-700 hover:bg-cyan-800  text-white font-semibold py-3 rounded-md transition-colors"
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center md:text-center">Welcome to Library Management</h2>
+            <p className="text-gray-500 text-center md:text-center mb-6 text-sm">Login to access your Library Dashboard</p>
+            <form
+              onSubmit={handleLogin}
+              className="space-y-4"
             >
-              {loading ? "Signing in..." : "Log In"}
-            </button>
-          </form>
-          <p className="mt-6 text-center text-gray-600">Don't have an account?{" "}<span className="text-cyan-700 font-medium cursor-pointer hover:underline"><a href="/signup">Sign Up</a></span></p>
+              <input
+                type="text"
+                onChange={(e) => setemail(e.target.value)}
+                value={email}
+                placeholder='Email'
+                className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
+              />
+              <input
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                placeholder="Password"
+                className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
+              />
+              <input
+                type="checkbox"
+                // onChange={(e) => setPassword(e.target.value)}
+                // value={checkbox}
+                className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
+              />
+
+              <label for="checkbox" class="ml-2 text-sm font-medium text-gray-900">Remember me</label>
+              <button
+                type='submit'
+                className="w-full mt-2 bg-cyan-700 hover:bg-cyan-800  text-white font-semibold py-3 rounded-md transition-colors"
+              >
+                {loading ? "Signing in..." : "Log In"}
+              </button>
+            </form>
+            <p className="mt-6 text-center text-gray-600">Don't have an account?{" "}<span className="text-cyan-700 font-medium cursor-pointer hover:underline"><a href="/signup">Sign Up</a></span></p>
           </div>
         </div>
       </div>
