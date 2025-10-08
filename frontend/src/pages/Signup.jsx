@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../utils/apiClient';
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -14,28 +15,20 @@ const Signup = () => {
         setLoading(true)
         // console.log(name,username,email,password);
 
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
+        try {
+            const payload = {
                 email,
                 username,
                 name,
                 password
-            }),
-        }
-        try {
-            const response = await fetch(
-                "http://localhost:5173/api/auth/register", requestOptions
-            );
-
-            const result = await response.text()
-            if (response.ok) {
+            }
+            const response = await apiClient.post("/auth/register", payload)
+            // console.log("response", response)
+            const result = await response.data
+            // console.log("result", result)
+            if (response.status === 201) {
                 console.log("Signup successfull", result)
-                navigate("/");
-
+                navigate("/login");
             }
         } catch (error) {
             console.log(error)
@@ -96,14 +89,14 @@ const Signup = () => {
                             placeholder="Password"
                             className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
                         />
-                        
+
                         <button
                             type='submit'
                             className="mt-2 bg-cyan-700 hover:bg-cyan-800  text-white font-semibold py-3 rounded-md transition-colors"
                         >
                             {loading ? "Signing up..." : "Sign Up"}
                         </button>
-                        
+
                         <div>
                             <p className="mt-2 text-center text-gray-600">Already have an account?{" "}<span className="text-cyan-700 cursor-pointer hover:underline font-medium"><a href="/login">Log In</a></span></p>
                         </div>
