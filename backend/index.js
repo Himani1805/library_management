@@ -5,7 +5,7 @@ import { userRouter } from "./src/routes/user.route.js";
 import { PORT } from "./src/config/config.js";
 import { bookRouter } from "./src/routes/books.route.js";
 import { myBookRouter } from "./src/routes/mybooks.route.js";
-import { authentication, authriozation } from "./src/middlewares/auth.middleware.js";
+import { authentication, authorization } from "./src/middlewares/auth.middleware.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -22,18 +22,18 @@ app.use(cors({
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/books', bookRouter)
-app.use('/api/mybooks', authentication, authriozation(["Admin", "User"]), myBookRouter)
+app.use('/api/mybooks', authentication, authorization(["Admin", "User"]), myBookRouter)
 
 app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (request, response) => {
-    return response.status(201).json({message : "Server health is good."})
+  return response.status(201).json({ message: "Server health is good." })
 })
 
-app.listen(PORT, ()=>{
-    console.log(`Server is connected on http://localhost:${PORT}`)
-    connectDB()
+app.listen(PORT, () => {
+  console.log(`Server is connected on http://localhost:${PORT}`)
+  connectDB()
 })
 
 

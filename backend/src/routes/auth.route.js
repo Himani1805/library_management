@@ -7,4 +7,4 @@ authRouter.post("/register", register)
 authRouter.post("/login", login)
 authRouter.delete("/logout", logout)
 
-export {authRouter};
+export { authRouter };

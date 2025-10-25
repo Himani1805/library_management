@@ -10,6 +10,9 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+
+
     setLoading(true)
     // console.log(email,password);
 
@@ -19,23 +22,20 @@ const Login = () => {
         password
       }
       const response = await apiClient.post("/auth/login", payload)
-      // console.log("response", response)
-      const result = await response.data
-      // console.log("result", result)
-      // if (response.status === 201) {
-      //     console.log("Signup successfull", result)
-      //     navigate("/login");
-      // }
+
+      // console.log("My Login");
+      console.log("response", response)
+      const result = response.data
+      console.log("result", result)
 
       if (response.status === 200) {
-        localStorage.setItem("token", result.access_token);
-        localStorage.setItem("token_type", result.token_type);
-        localStorage.setItem("email", result.email);
+        localStorage.setItem("token", result?.token);
+        localStorage.setItem("user", JSON.stringify(result?.user));
 
         setTimeout(() => {
-          navigate("/admin");
+          result?.user?.role === "admin" ? navigate("/admin") : navigate("/dashboard");
           window.location.reload();
-        }, 2000)
+        }, 500)
       }
     } catch (error) {
       console.log(error)
@@ -87,7 +87,7 @@ const Login = () => {
                 className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-300 text-gray-700"
               />
 
-              <label for="checkbox" class="ml-2 text-sm font-medium text-gray-900">Remember me</label>
+              <label htmlFor="checkbox" className="ml-2 text-sm font-medium text-gray-900">Remember me</label>
               <button
                 type='submit'
                 className="w-full mt-2 bg-cyan-700 hover:bg-cyan-800  text-white font-semibold py-3 rounded-md transition-colors"

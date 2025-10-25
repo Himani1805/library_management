@@ -1,54 +1,74 @@
-import React, { useState } from "react";
-import { BookPlus, FileText } from "lucide-react";
-
+import React, { useState, useEffect, useContext } from "react";
+import { BookPlus } from "lucide-react";
+import apiClient from "../../utils/apiClient";
+import { BookContext } from "../../context/BookProvider";
 const AddBooks = () => {
+  const { books, setBooks } = useContext(BookContext);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
-    coverImage: "",
-    bookFile: null,
-    bookFileUrl: "",
+    isbn: "",
+    coverImage: null,
+    price: "",
+    availability: true,
+    content: null,
   });
+
+  // title, author, coverImage, availability
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    if (name === "coverImage" && files.length > 0) {
-      const file = files[0];
-      setFormData({
-        ...formData,
-        coverImage: URL.createObjectURL(file),
-      });
-    } else if (name === "uploadBook" && files.length > 0) {
-      const file = files[0];
-      setFormData({
-        ...formData,
-        bookFile: file,
-        bookFileUrl: URL.createObjectURL(file),
-      });
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    console.log("Book Added:", formData);
-  };
+  async function handleAdd(event) {
+    event.preventDefault();
 
-  const handleViewPdf = () => {
-    if (formData.bookFileUrl) {
-      window.open(formData.bookFileUrl, "_blank");
-    } else {
-      alert("Please upload a PDF first!");
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("author", formData.author);
+    data.append("isbn", formData.isbn);
+    data.append("price", formData.price);
+    data.append("availability", formData.availability);
+    data.append("coverImage", formData.coverImage);
+    data.append("content", formData.content);
+
+    try {
+      const response = await apiClient.post("/books", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const result = response.data;
+
+      console.log("response", response);
+      console.log("result", result);
+
+      if (response.status === 201) {
+        console.log("Book added successfully:", result.data);
+        setBooks([...books, result?.data]);
+        console.log("Add Book Success - ", result.message);
+        console.log("****");
+        window.alert("Book added successfully!");
+
+      }
+      console.log("Book Added form data:", formData);
+
+    } catch (error) {
+      console.error("Error adding book:", error);
     }
-  };
+  }
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center bg-gray-50 px-4 py-6">
+    <div className="w-full min-h-screen/2 flex justify-center items-center bg-gray-50 px-4 py-6">
       {/* Container: responsive flex */}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-full max-w-5xl">
-        
+      <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-full max-w-xl">
         {/* Left: Add Book Form */}
         <div className="flex-1 bg-white shadow-lg rounded-2xl p-6">
           {/* Header */}
@@ -91,6 +111,36 @@ const AddBooks = () => {
               />
             </div>
 
+            {/* ISBN */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                ISBN
+              </label>
+              <input
+                type="text"
+                name="isbn"
+                value={formData.isbn}
+                onChange={handleChange}
+                placeholder="Enter ISBN's number"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+              />
+            </div>
+
+            {/* Price */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Price (Rs.)
+              </label>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder="Enter price of the book"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+              />
+            </div>
+
             {/* Cover Image */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -112,15 +162,14 @@ const AddBooks = () => {
               </label>
               <input
                 type="file"
-                name="uploadBook"
+                name="content"
                 accept=".pdf"
                 onChange={handleChange}
                 className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
               />
-              {formData.bookFile && (
+              {formData.content && (
                 <div className="mt-2 flex items-center text-sm text-gray-600">
-                  <FileText className="w-4 h-4 mr-2 text-cyan-600" />
-                  {formData.bookFile.name}
+                  {formData.content.name}
                 </div>
               )}
             </div>
@@ -133,43 +182,6 @@ const AddBooks = () => {
               Add Book
             </button>
           </form>
-        </div>
-
-        {/* Right: Preview Section */}
-        <div className="flex-1 bg-white shadow-lg rounded-2xl p-6 flex flex-col justify-between">
-          {/* Book Cover Preview */}
-          <div className="flex justify-center mb-4">
-            {formData.coverImage ? (
-              <img
-                src={formData.coverImage}
-                alt="Book Cover"
-                className="w-28 h-36 object-cover rounded-lg shadow-md"
-              />
-            ) : (
-              <div className="w-28 h-36 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-gray-400">
-                No Image
-              </div>
-            )}
-          </div>
-
-          {/* Book Info */}
-          <div className="text-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              {formData.title || "Book Title"}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {formData.author || "Author Name"}
-            </p>
-          </div>
-
-          {/* View Book PDF Button */}
-          <button
-            type="button"
-            onClick={handleViewPdf}
-            className="w-full bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 transition font-medium shadow-md"
-          >
-            View Book PDF
-          </button>
         </div>
       </div>
     </div>
