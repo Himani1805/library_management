@@ -47,10 +47,10 @@ const UserManagement = () => {
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'All' || user.role === roleFilter;
     const matchesStatus = statusFilter === 'All' || user.status === statusFilter;
-    
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -61,8 +61,8 @@ const UserManagement = () => {
   };
 
   const handleStatusToggle = (userId) => {
-    setUsers(users.map(user => 
-      user.id === userId 
+    setUsers(users.map(user =>
+      user.id === userId
         ? { ...user, status: user.status === 'Active' ? 'Inactive' : 'Active' }
         : user
     ));
@@ -70,8 +70,40 @@ const UserManagement = () => {
 
   return (
     <div className="p-6">
+
+      <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
+
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
+
+        {/* start stat */}
+
+        {/* Stats Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="text-2xl font-bold text-gray-800">{users.length}</div>
+            <div className="text-sm text-gray-600">Total Users</div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="text-2xl font-bold text-green-600">
+              {users.filter(u => u.status === 'Active').length}
+            </div>
+            <div className="text-sm text-gray-600">Active Users</div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="text-2xl font-bold text-blue-600">
+              {users.filter(u => u.role === 'User').length}
+            </div>
+            <div className="text-sm text-gray-600">Regular Users</div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="text-2xl font-bold text-purple-600">
+              {users.filter(u => u.role === 'Admin' || u.role === 'Librarian').length}
+            </div>
+            <div className="text-sm text-gray-600">Staff Members</div>
+          </div>
+        </div>
+
+        {/* end stat */}
         <button className="flex items-center gap-2 bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition">
           <UserPlus size={20} />
           Add New User
@@ -91,7 +123,7 @@ const UserManagement = () => {
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             />
           </div>
-          
+
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
@@ -146,22 +178,20 @@ const UserManagement = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
                       user.role === 'Librarian' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                        'bg-gray-100 text-gray-800'
+                      }`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => handleStatusToggle(user.id)}
-                      className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full cursor-pointer ${
-                        user.status === 'Active' 
-                          ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                          : 'bg-red-100 text-red-800 hover:bg-red-200'
-                      }`}
+                      className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full cursor-pointer ${user.status === 'Active'
+                        ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                        : 'bg-red-100 text-red-800 hover:bg-red-200'
+                        }`}
                     >
                       {user.status}
                     </button>
@@ -180,7 +210,7 @@ const UserManagement = () => {
                       <button className="text-gray-600 hover:text-gray-800">
                         <Mail size={16} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDeleteUser(user.id)}
                         className="text-red-600 hover:text-red-800"
                       >
@@ -193,38 +223,12 @@ const UserManagement = () => {
             </tbody>
           </table>
         </div>
-        
+
         {filteredUsers.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             No users found matching your criteria.
           </div>
         )}
-      </div>
-
-      {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <div className="text-2xl font-bold text-gray-800">{users.length}</div>
-          <div className="text-sm text-gray-600">Total Users</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <div className="text-2xl font-bold text-green-600">
-            {users.filter(u => u.status === 'Active').length}
-          </div>
-          <div className="text-sm text-gray-600">Active Users</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <div className="text-2xl font-bold text-blue-600">
-            {users.filter(u => u.role === 'User').length}
-          </div>
-          <div className="text-sm text-gray-600">Regular Users</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <div className="text-2xl font-bold text-purple-600">
-            {users.filter(u => u.role === 'Admin' || u.role === 'Librarian').length}
-          </div>
-          <div className="text-sm text-gray-600">Staff Members</div>
-        </div>
       </div>
     </div>
   );

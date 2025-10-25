@@ -1,22 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { 
-    LayoutDashboard, 
-    BookOpen, 
-    Bookmark, 
-    Users, 
-    Settings 
+import {
+    LayoutDashboard,
+    BookOpen,
+    Bookmark,
+    Users,
+    Settings
 } from 'lucide-react';
-import Books from '../../pages/Books';
-import EditBooks from '../book/EditBooks';
-import UserManagement from '../../pages/UserManagement';
+import Books from './Books';
+import EditBooks from '../components/book/EditBooks';
+import UserManagement from './UserManagement';
 // import Settings from '../../pages/Settings';
 
 const AdminDashboard = () => {
     return (
-        <div className='h-screen flex'>
+        <div className='w-full h-screen flex border border-yellow-600'>
             {/* Sidebar */}
-            <div className='w-1/4 flex flex-col gap-2 bg-cyan-800 px-6 py-12 text-white text-lg font-medium'>
+            {/* <div className='w-1/4 flex flex-col gap-2 bg-cyan-800 px-6 py-12 text-white text-lg font-medium'>
                 
                 <Link to="/admin" className='flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-cyan-600 hover:text-white transition'>
                     <LayoutDashboard /> Dashboard
@@ -37,15 +37,15 @@ const AdminDashboard = () => {
                 <Link to="/settings" className='flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-cyan-600 hover:text-white transition'>
                     <Settings /> Settings
                 </Link>
+            </div> */}
+
+            {/* Main Content */}
+            <div className='w-full flex flex-col gap-2 bg-gray-100'>
+                {/* <Books /> */}
+                <h1 className='text-2xl font-bold text-gray-700'>Welcome to Admin Dashboard Mr XXX</h1>
             </div>
 
             {/* Main Content */}
-            <div className='w-3/4 flex flex-col gap-2 bg-gray-100'>
-            <Books />
-                 <h1 className='text-2xl font-bold text-gray-700'>Welcome to Admin Dashboard</h1> 
-            </div>
-            
-                  {/* Main Content */}
             {/* <div className='w-3/4 flex flex-col bg-gray-100 overflow-auto'>
                 <Routes>
                     <Route path="/" element={<div className="p-6"><h1 className="text-2xl font-bold text-gray-700">Welcome to Admin Dashboard</h1></div>} />

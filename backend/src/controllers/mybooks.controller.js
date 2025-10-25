@@ -3,8 +3,8 @@ import { myBookModel } from "../models/mybooks.model.js";
 
 async function getuserBook(request, response, next) {
   try {
-    // const { userId } = request.user;
-    const userId = "689c891ecec586fdc0442d41"
+    const { userId } = request.user;
+    // const userId = "689c891ecec586fdc0442d41"
     // console.log("user id", userId)
     const data = await myBookModel.find({ userId }).populate("bookId");
     console.log("my book controller data", data)
